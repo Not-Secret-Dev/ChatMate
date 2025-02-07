@@ -1,8 +1,19 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { TbWorld } from "react-icons/tb";
 import { IoIosAttach } from "react-icons/io";
 import { FaArrowUp } from "react-icons/fa";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 function App() {
   const MainSection = styled.div`
@@ -10,77 +21,90 @@ function App() {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
     font-family: "Arial", sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: ${fadeIn} 0.5s ease-in-out;
 
     .heading {
       text-align: center;
       margin-bottom: 30px;
+      width: 90%;
+      max-width: 600px;
     }
 
     .heading h1 {
       margin-bottom: 10px;
-      font-size: 2.5rem;
-      color: #333;
+      font-size: 2rem;
+      color: #343a40;
+      font-weight: 600;
     }
 
     .heading p {
-      font-size: 1.2rem;
-      color: #666;
+      font-size: 1rem;
+      color: #6c757d;
     }
 
     .inputSection {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      width: 95%;
+      max-width: 650px;
       border-radius: 16px;
-      width: 650px;
-      height: 100px;
-      border: 1px solid #ddd;
+      border: 1px solid #ced4da;
       background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
     }
 
     .inputSection input {
-      width: 96%;
-      height: 50%;
+      width: 100%;
+      height: 50px;
       padding: 0 12px;
       border: none;
       outline: none;
-      border-radius: 16px;
       font-size: 1rem;
-      color: #333;
+      color: #343a40;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease-in-out;
+
+      &:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
     }
 
     .inputSection input::placeholder {
       font-size: 1rem;
-      color: #999;
+      color: #adb5bd;
     }
 
-    .inputSection .buttons {
+    .buttons {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
-      width: 96%;
-      margin: 12px 0;
+      width: 100%;
+      padding: 12px;
+      gap: 10px;
+      box-sizing: border-box;
     }
 
-    .inputSection .buttons .left {
-      width: 50%;
-      position: relative; /* Required for tooltip positioning */
-    }
-
-    .inputSection .buttons .right {
+    .left,
+    .right {
       display: flex;
-      justify-content: flex-end;
       align-items: center;
-      gap: 12px;
-      width: 50%;
+      gap: 10px;
     }
 
-    .inputSection .buttons .left button {
+    button {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -88,75 +112,126 @@ function App() {
       gap: 8px;
       font-size: 0.9rem;
       border-radius: 23px;
-      border: 1px solid #ddd;
-      background-color: #f9f9f9;
-      color: #333;
-      transition: background-color 0.3s ease;
-      position: relative; /* Required for tooltip positioning */
-    }
-
-    .inputSection .buttons .left button:hover {
-      background-color: #e0e0e0;
-    }
-
-    .inputSection .buttons .left #icon {
-      font-size: 1.2rem;
-    }
-
-    .inputSection .buttons .right button {
-      width: 36px;
-      height: 36px;
-      font-size: 1.2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      border: 1px solid #ddd;
-      background-color: #f9f9f9;
-      color: #333;
-      transition: background-color 0.3s ease;
-    }
-
-    .inputSection .buttons .right button:hover {
-      background-color: #e0e0e0;
-    }
-
-    .inputSection .buttons .right #send {
+      border: none;
       background-color: #007bff;
       color: #fff;
-      border: none;
-    }
-
-    .inputSection .buttons .right #send:hover {
-      background-color: #0056b3;
-    }
-
-    /* Tooltip Styling */
-    .inputSection .buttons .left button::before {
-      content: "Search the web";
-      position: absolute;
-      bottom: 8%;
-      left: 160%;
-      transform: translateX(-50%);
-      background-color: #333;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 0.8rem;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
       white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        background-color: #0056b3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
     }
 
-    .inputSection .buttons .left button:hover::before {
-      opacity: 1;
-      visibility: visible;
+    button#attachments {
+      background-color: transparent;
+      color: #6c757d;
+      border: 1px solid #ced4da;
+
+      &:hover {
+        background-color: #f8f9fa;
+        color: #5a6268;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
     }
 
-    .inputSection .buttons .left button:hover::after {
-      opacity: 1;
-      visibility: visible;
+    #icon {
+      font-size: 1.2rem;
+    }
+
+    #send {
+      /* Styles already applied to all buttons */
+    }
+
+    /* Media Queries */
+    @media (max-width: 375px) {
+      .heading h1 {
+        font-size: 1.4rem;
+      }
+      .heading p {
+        font-size: 0.8rem;
+      }
+      .inputSection input {
+        height: 35px;
+        font-size: 0.8rem;
+      }
+      button {
+        font-size: 0.7rem;
+        padding: 6px 10px;
+      }
+      #icon {
+        font-size: 1rem;
+      }
+    }
+
+    @media (min-width: 376px) and (max-width: 767px) {
+      .heading h1 {
+        font-size: 1.6rem;
+      }
+      .heading p {
+        font-size: 0.9rem;
+      }
+      .inputSection input {
+        height: 40px;
+        font-size: 0.9rem;
+      }
+      button {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+      }
+      #icon {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .heading h1 {
+        font-size: 1.8rem;
+      }
+      .heading p {
+        font-size: 1rem;
+      }
+      .inputSection input {
+        height: 45px;
+        font-size: 1rem;
+      }
+      button {
+        font-size: 0.9rem;
+        padding: 8px 14px;
+      }
+      #icon {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .heading h1 {
+        font-size: 2rem;
+      }
+      .heading p {
+        font-size: 1.1rem;
+      }
+      .inputSection input {
+        height: 50px;
+        font-size: 1.1rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 10px 18px;
+      }
+      #icon {
+        font-size: 1.3rem;
+      }
     }
   `;
 
