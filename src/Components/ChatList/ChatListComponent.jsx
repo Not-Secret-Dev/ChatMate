@@ -1,14 +1,16 @@
 import styled from "styled-components";
+import InputComponent from "../Input/InputComponent";
+import FooterComponent from "../Footer/FooterComponent";
+import { useState } from "react";
 
 const ChatListContainer = styled.div`
+  position: relative;
   width: 60%;
-  max-width: 90%;
-  height: 500px;
+  max-width: 70%;
+  height: min(100vh, 600px);
   background: #fff;
   margin: auto;
-  margin-top: 23px;
   border-radius: 16px;
-  padding: 16px;
   overflow-y: auto;
   font-family: "Arial", sans-serif;
   display: flex;
@@ -23,16 +25,15 @@ const ChatListContainer = styled.div`
   }
 
   ul {
-    list-style: none;
+    margin-top: 23px;
     padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
   }
 
   li {
-    width: 450px;
-    /* max-width: 450px; */
+    max-width: 80%;
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 10px;
@@ -59,17 +60,32 @@ const ChatListContainer = styled.div`
     color: #fff;
     align-self: flex-end;
   }
+
+  .input {
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const ChatListComponent = () => {
-    return (
-        <ChatListContainer>
-            <ul>
-                <li className="bot">Hello! How can I assist you today?</li>
-                <li className="user">I need help with my order.</li>
-            </ul>
-        </ChatListContainer>
-    );
+  const [inputValue, setinputValue] = useState("");
+
+  const handleInputData = (value) => {
+    setinputValue(value);
+  };
+
+  return (
+    <ChatListContainer>
+      <ul>
+        <li className="bot">Hello! How can I assist you today?</li>
+        <li className="user">I need help with my order.</li>
+      </ul>
+      <div className="input">
+        <InputComponent onInputChange={handleInputData} />
+      </div>
+      <FooterComponent />
+    </ChatListContainer>
+  );
 };
 
 export default ChatListComponent;
