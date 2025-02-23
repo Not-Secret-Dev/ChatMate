@@ -2,46 +2,50 @@ import styled from "styled-components";
 import InputComponent from "../Input/InputComponent";
 import FooterComponent from "../Footer/FooterComponent";
 import { useState } from "react";
+import { getAIResponse } from "../ChatBot/ChatBot";
 
 const ChatListContainer = styled.div`
   position: relative;
-  width: 60%;
-  max-width: 70%;
+  width: 75%;
+  max-width: 800px;
   height: min(100vh, 600px);
   background: #fff;
   margin: auto;
   border-radius: 16px;
-  overflow-y: auto;
+  overflow: hidden;
   font-family: "Arial", sans-serif;
   display: flex;
   flex-direction: column;
   animation: fadeIn 0.5s ease-in-out;
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: #343a40;
-    margin-bottom: 12px;
+    margin: 14px 0;
     text-align: center;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
 
   ul {
-    margin-top: 23px;
-    padding: 0;
+    flex-grow: 1;
+    padding: 12px;
+    list-style: none;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    gap: 10px;
   }
 
   li {
-    max-width: 80%;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 1rem;
+    max-width: 85%;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     transition: transform 0.3s;
+    word-break: break-word;
   }
 
   li:hover {
@@ -63,27 +67,84 @@ const ChatListContainer = styled.div`
 
   .input {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding: 12px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    outline: none;
+    left: 0;
+  }
+
+  @media (max-width: 900px) {
+    width: 85%;
+    max-width: 90%;
+    height: min(100vh, 550px);
+
+    li {
+      max-width: 90%;
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    width: 95%;
+    height: min(100vh, 500px);
+
+    li {
+      max-width: 95%;
+      font-size: 0.95rem;
+    }
+
+    .input {
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 500px;
+      background: white;
+    }
   }
 `;
 
-const ChatListComponent = () => {
-  const [inputValue, setinputValue] = useState("");
+const ChatListComponent = ({ chatHeader, messages, setMessages }) => {
+  const [inputValue, setInputValue] = useState("");
 
-  const handleInputData = (value) => {
-    setinputValue(value);
+  const handleInputData = async (value) => {
+    if (!value.trim()) return;
+    setMessages((prev) => [...prev, { sender: "user", text: value }]);
+    try {
+      const botResponse = await getAIResponse(value);
+      setMessages((prev) => [...prev, { sender: "bot", text: botResponse }]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "Error getting response." },
+      ]);
+    }
   };
 
   return (
     <ChatListContainer>
+      <h2 style={{ textAlign: "center", margin: "23px 0" }}>{chatHeader}</h2>
+
       <ul>
-        <li className="bot">Hello! How can I assist you today?</li>
-        <li className="user">I need help with my order.</li>
+        {messages.map((msg, index) => (
+          <li key={index} className={msg.sender === "user" ? "user" : "bot"}>
+            {msg.text}
+          </li>
+        ))}
       </ul>
+
       <div className="input">
         <InputComponent onInputChange={handleInputData} />
+        <FooterComponent />
       </div>
-      <FooterComponent />
     </ChatListContainer>
   );
 };

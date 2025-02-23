@@ -5,9 +5,9 @@ const FooterComponent = () => {
     <div
       style={{
         textAlign: "center",
-        marginTop: "13px",
+        margin: "13px",
         color: "#888",
-        fontSize: "small",
+        fontSize: "11px",
       }}
     >
       AI Generated, For referece-only | © 2025 Aayan Mumtaz. All rights

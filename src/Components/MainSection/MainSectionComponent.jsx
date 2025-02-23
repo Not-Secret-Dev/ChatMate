@@ -83,18 +83,20 @@ const MainSection = styled.div`
   }
 `;
 
-const MainSectionComponent = ({ toggleChatList }) => {
-  const [inputValue, setinputValue] = useState("");
+const MainSectionComponent = ({
+  toggleChatList,
+  setChatHeader,
+  setMessages,
+}) => {
+  const [inputValue, setInputValue] = useState("");
   const [isFirstInputSent, setIsFirstInputSent] = useState(false);
 
   const handleInputChange = (value) => {
-    setinputValue(value);
+    setInputValue(value);
     setIsFirstInputSent(true);
+    setChatHeader(value); // Set chat header
+    setMessages([{ sender: "user", text: value }]); // Initialize chat messages
   };
-
-  if (isFirstInputSent) {
-    toggleChatList();
-  }
 
   useEffect(() => {
     if (isFirstInputSent) {
