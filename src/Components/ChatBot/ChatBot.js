@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const API_URL = "https://openrouter.ai/api/v1/chat/completions";
-const API_KEY =
-  "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";
+const API_KEY = "Your_API_Key";
 
 export const getAIResponse = async (message) => {
   try {
