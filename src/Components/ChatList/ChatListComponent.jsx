@@ -1,14 +1,29 @@
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import InputComponent from "../Input/InputComponent";
 import FooterComponent from "../Footer/FooterComponent";
-import { useState } from "react";
 import { getAIResponse } from "../ChatBot/ChatBot";
+
+const MainContainer = styled.div `  
+  .input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: -10px;
+    width: 100%;
+    outline: none;
+    overflow: hidden;
+    left: 0;
+  }
+`
 
 const ChatListContainer = styled.div`
   position: relative;
   width: 75%;
   max-width: 800px;
-  height: min(100vh, 600px);
+  height: min(75vh, 600px);
   background: #fff;
   margin: auto;
   border-radius: 16px;
@@ -65,18 +80,6 @@ const ChatListContainer = styled.div`
     align-self: flex-end;
   }
 
-  .input {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 12px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    outline: none;
-    left: 0;
-  }
 
   @media (max-width: 900px) {
     width: 85%;
@@ -113,10 +116,18 @@ const ChatListContainer = styled.div`
 
 const ChatListComponent = ({ chatHeader, messages, setMessages }) => {
   const [inputValue, setInputValue] = useState("");
+  const chatListRef = useRef(null); // Reference for chat messages
+
+  useEffect(() => {
+    if (chatListRef.current) {
+      chatListRef.current.scrollTop = chatListRef.current.scrollHeight; // Scroll to the latest message
+    }
+  }, [messages]);
 
   const handleInputData = async (value) => {
     if (!value.trim()) return;
     setMessages((prev) => [...prev, { sender: "user", text: value }]);
+
     try {
       const botResponse = await getAIResponse(value);
       setMessages((prev) => [...prev, { sender: "bot", text: botResponse }]);
@@ -130,22 +141,23 @@ const ChatListComponent = ({ chatHeader, messages, setMessages }) => {
   };
 
   return (
-    <ChatListContainer>
-      <h2 style={{ textAlign: "center", margin: "23px 0" }}>{chatHeader}</h2>
+    <MainContainer>
+      <ChatListContainer>
+        <h2 style={{ textAlign: "center", margin: "23px 0" }}>{chatHeader}</h2>
 
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index} className={msg.sender === "user" ? "user" : "bot"}>
-            {msg.text}
-          </li>
-        ))}
-      </ul>
-
+        <ul ref={chatListRef}>
+          {messages.map((msg, index) => (
+            <li key={index} className={msg.sender === "user" ? "user" : "bot"}>
+              {msg.text}
+            </li>
+          ))}
+        </ul>
+      </ChatListContainer>
       <div className="input">
         <InputComponent onInputChange={handleInputData} />
         <FooterComponent />
       </div>
-    </ChatListContainer>
+    </MainContainer>
   );
 };
 
